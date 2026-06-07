@@ -2,15 +2,17 @@ import React, { useEffect } from "react";
 import OrdersTable from "./OrderTable";
 import {
   Card,
+  Chip,
   FormControl,
   FormControlLabel,
   Radio,
   RadioGroup,
   Typography,
 } from "@mui/material";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRestaurantsOrder } from "../../State/Admin/Order/restaurants.order.action";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 
 const orderStatus = [
   { label: "Pending", value: "PENDING" },
@@ -24,7 +26,6 @@ const RestaurantsOrder = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { id } = useParams();
   const jwt = localStorage.getItem("jwt");
   const { restaurant, auth } = useSelector((store) => store);
 
@@ -54,11 +55,18 @@ const RestaurantsOrder = () => {
   };
   
   return (
-    <div className="px-2">
-      <Card className="p-5">
-        <Typography sx={{ paddingBottom: "1rem" }} variant="h5">
-          Order Status
-        </Typography>
+    <div className="admin-orders-page px-2">
+      <Card className="admin-order-filter-card p-5">
+        <div className="admin-section-heading">
+          <div className="admin-section-heading__icon">
+            <ReceiptLongIcon />
+          </div>
+          <div>
+            <p>Restaurant Orders</p>
+            <Typography variant="h5">Order Status</Typography>
+          </div>
+          <Chip className="status-info" label={filterValue || "all"} size="small" />
+        </div>
         <FormControl className="py-10" component="fieldset">
           <RadioGroup
             row

@@ -36,7 +36,7 @@ const RestaurantDashboard = () => {
     );
   }, [dispatch, restaurantId]);
 
-  console.log("restaurant",restaurant)
+
   const orders = restaurantsOrder.orders || [];
   const menuItems = menu.menuItems || [];
   const totalRevenue = orders.reduce(

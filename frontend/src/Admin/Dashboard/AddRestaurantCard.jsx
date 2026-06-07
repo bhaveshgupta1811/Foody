@@ -8,7 +8,7 @@ const AddRestaurantCard = () => {
   return (
     <Card
       onClick={() => navigate("/admin/restaurant/add-restaurant")}
-      className="dashboard-stat flex min-h-[30rem] cursor-pointer items-center justify-center px-5 transition hover:-translate-y-1"
+      className="dashboard-stat admin-add-restaurant-card flex min-h-[30rem] cursor-pointer items-center justify-center px-5 transition hover:-translate-y-1"
       sx={{ width: 345, m: "0.25rem", borderRadius: "8px" }}
     >
       <div className="flex flex-col items-center">

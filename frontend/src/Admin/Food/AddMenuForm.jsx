@@ -80,7 +80,6 @@ const AddMenuForm = () => {
       values.restaurantId = restaurant.usersRestaurant.id;
 
       dispatch(createMenuItem({ menu: values, jwt: auth.jwt || jwt }));
-      console.log("values ----- ", values);
     },
   });
 

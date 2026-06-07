@@ -31,7 +31,7 @@ import {
     }, []);
   
     const handleDeleteProduct = (productId) => {
-      console.log("delete product ", productId);
+      // Handle delete product
     };
   
     return (

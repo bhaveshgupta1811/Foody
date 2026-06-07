@@ -27,7 +27,7 @@ const handleUpdateRestaurantStatus=()=>{
 }
 
   return (
-    <Card className="dashboard-stat group" sx={{ width: 345, m: "0.25rem", borderRadius: "8px", overflow: "hidden" }}>
+    <Card className="dashboard-stat admin-restaurant-card group" sx={{ width: 345, m: "0.25rem", borderRadius: "8px", overflow: "hidden" }}>
       <CardHeader
         avatar={
           <Avatar

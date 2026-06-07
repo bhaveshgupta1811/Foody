@@ -48,18 +48,18 @@ const ProfileNavigation = ({ handleClose, open }) => {
         variant={isSmallScreen ? "temporary" : "permanent"}
         // variant="persistent"
       >
-        <div className="w-[50vw] lg:w-[20vw] h-[100vh] flex flex-col justify-center text-xl space-y-8 pt-16">
+        <div className="profile-nav w-[50vw] lg:w-[20vw] h-[100vh] flex flex-col justify-center text-xl space-y-3 pt-16">
           {menu.map((item, i) => (
-            <>
+            <React.Fragment key={item.title}>
               <div
                 onClick={() => handleNavigate(item)}
-                className="px-5 flex items-center space-x-5 cursor-pointer"
+                className="profile-nav__item px-5 flex items-center space-x-5 cursor-pointer"
               >
                 {item.icon}
                 <span>{item.title}</span>
               </div>
               {i !== menu.length - 1 && <Divider />}
-            </>
+            </React.Fragment>
           ))}
         </div>
       </Drawer>
