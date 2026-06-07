@@ -1,12 +1,11 @@
-import { Alert, Box, Button, Modal, Snackbar, Typography } from "@mui/material";
+import { Alert, Box, Button, Modal, Snackbar } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import RegistrationForm from "../../components/Register/Register";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoginForm from "../../components/Login/Login";
 import ResetPasswordRequest from "./ResetPaswordRequest";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ResetPasswordForm from "./ResetPasswordForm";
-import { resetPassword } from "../../../State/Authentication/Action";
 
 const style = {
   position: "absolute",

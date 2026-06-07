@@ -829,3 +829,341 @@ p {
   background: #fc8019;
   box-shadow: 0 0 0 5px rgba(252,128,25,0.12);
 }
+
+/* Remaining customer and admin motion surfaces */
+.account-shell {
+  min-height: calc(100vh - 64px);
+  background:
+    radial-gradient(circle at 18% 4%, rgba(252,128,25,0.1), transparent 22rem),
+    linear-gradient(180deg, #0b0b0c, #080808);
+}
+.account-shell__content,
+.account-page,
+.admin-orders-page,
+.admin-dashboard-page,
+.cart-page,
+.payment-success-page,
+.not-found-page {
+  animation: fadeUp 0.42s cubic-bezier(0.16,1,0.3,1) both;
+}
+.profile-nav {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015)),
+    #101114;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+.profile-nav__item {
+  min-height: 46px;
+  margin: 0 12px;
+  border-radius: 8px;
+  color: rgba(255,255,255,0.72);
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+.profile-nav__item:hover {
+  background: rgba(252,128,25,0.1);
+  color: #fff;
+  transform: translateX(4px);
+}
+.account-page {
+  min-height: 80vh;
+  padding: 28px 20px 44px;
+}
+.account-page-header,
+.admin-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: min(760px, 100%);
+  margin: 0 auto 24px;
+}
+.admin-section-heading {
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0;
+}
+.account-page-header__icon,
+.admin-section-heading__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(252,128,25,0.13);
+  color: #fc8019;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+}
+.account-page-eyebrow,
+.admin-section-heading p {
+  margin: 0 0 2px;
+  color: #fc8019;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.account-page-header h1,
+.admin-section-heading .MuiTypography-root {
+  margin: 0;
+  color: #fff;
+  font-size: 1.55rem;
+  font-weight: 900;
+}
+.account-empty-state,
+.not-found-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: min(520px, 100%);
+  margin: 38px auto;
+  padding: 42px 24px;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.016)),
+    #111214;
+  color: rgba(255,255,255,0.42);
+  text-align: center;
+  animation: scaleIn 0.32s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.account-empty-state h2,
+.not-found-card h1 {
+  margin-top: 14px;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+.account-empty-state p,
+.not-found-card span {
+  margin-top: 6px;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.9rem;
+}
+.account-profile-card,
+.account-notification-card,
+.account-order-card,
+.admin-order-card,
+.admin-order-filter-card,
+.cart-bill-card,
+.cart-add-address-card,
+.payment-success-card {
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 8px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018)),
+    #111214 !important;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.24) !important;
+}
+.account-profile-card {
+  width: min(440px, 100%);
+  padding: 34px 24px;
+  animation: scaleIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.account-notification-card {
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+.account-notification-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(252,128,25,0.32) !important;
+}
+.account-order-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px;
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+.account-order-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(252,128,25,0.32) !important;
+}
+.account-order-card__img {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 12px 26px rgba(0,0,0,0.28);
+}
+.account-order-card__name {
+  color: #fff;
+  font-weight: 900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.account-order-card__price,
+.admin-order-price {
+  color: #fc8019;
+  font-weight: 900;
+}
+.status-success,
+.status-info,
+.status-warning {
+  color: #fff !important;
+  font-weight: 900 !important;
+  border-radius: 999px !important;
+}
+.status-success { background: rgba(34,197,94,0.22) !important; color: #86efac !important; }
+.status-info { background: rgba(59,130,246,0.22) !important; color: #93c5fd !important; }
+.status-warning { background: rgba(252,128,25,0.22) !important; color: #fdba74 !important; }
+.admin-order-filter-card {
+  margin-bottom: 12px;
+}
+.admin-order-card {
+  overflow: hidden;
+}
+.admin-orders-table .MuiTableBody-root .MuiTableRow-root {
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+.admin-orders-table .MuiTableBody-root .MuiTableRow-root:hover {
+  background: rgba(252,128,25,0.08);
+  transform: translateX(3px);
+}
+.admin-order-id {
+  display: inline-flex;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.72);
+  font-weight: 800;
+}
+.admin-dashboard-hero,
+.admin-restaurant-card,
+.admin-add-restaurant-card {
+  position: relative;
+  overflow: hidden;
+}
+.admin-dashboard-hero::after,
+.admin-restaurant-card::after,
+.admin-add-restaurant-card::after,
+.payment-success-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.09), transparent);
+  transform: translateX(-120%);
+  transition: transform 680ms ease;
+}
+.admin-dashboard-hero:hover::after,
+.admin-restaurant-card:hover::after,
+.admin-add-restaurant-card:hover::after,
+.payment-success-card:hover::after {
+  transform: translateX(120%);
+}
+.cart-page {
+  min-height: calc(100vh - 64px);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(252,128,25,0.08), transparent 22rem),
+    #080808;
+}
+.cart-page__summary,
+.cart-page__addresses {
+  animation: fadeUp 0.42s cubic-bezier(0.16,1,0.3,1) both;
+}
+.cart-item-card {
+  margin: 0 18px;
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 8px;
+  background: rgba(17,18,20,0.88);
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+.cart-item-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(252,128,25,0.3);
+}
+.cart-item-card__main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.cart-item-card__img {
+  width: 76px;
+  height: 76px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.cart-item-card__body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+.cart-item-card__name {
+  color: #fff;
+  font-weight: 900;
+}
+.cart-item-card__price {
+  color: #fc8019;
+  margin-top: 3px;
+  font-size: 0.85rem;
+  font-weight: 900;
+}
+.cart-item-card__stepper {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.cart-item-card__stepper span {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.06);
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+.cart-item-card__ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+.cart-bill-card {
+  margin: 0 18px 18px;
+  padding-bottom: 18px;
+}
+.cart-add-address-card {
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+.cart-add-address-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(252,128,25,0.32) !important;
+}
+.cart-empty-state {
+  background:
+    radial-gradient(circle at center, rgba(252,128,25,0.1), transparent 20rem),
+    #080808;
+  animation: fadeUp 0.42s cubic-bezier(0.16,1,0.3,1) both;
+}
+.payment-success-card {
+  position: relative;
+  padding: 30px 22px;
+  animation: scaleIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.not-found-page {
+  background:
+    radial-gradient(circle at center, rgba(252,128,25,0.12), transparent 22rem),
+    #080808;
+}
+.not-found-card p {
+  margin-top: 12px;
+  color: #fc8019;
+  font-size: 3rem;
+  font-weight: 900;
+}
+@media (max-width: 760px) {
+  .account-shell { display: block; }
+  .account-shell__nav { position: static; height: auto; }
+  .account-page { padding: 22px 14px 34px; }
+  .account-page-header { align-items: flex-start; }
+  .account-order-card { align-items: flex-start; flex-direction: column; }
+  .cart-item-card__body { align-items: flex-start; flex-direction: column; }
+  .admin-section-heading { align-items: flex-start; flex-direction: column; }
+}

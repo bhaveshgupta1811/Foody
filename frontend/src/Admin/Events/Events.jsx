@@ -70,7 +70,7 @@ const Events = () => {
         jwt
       })
     );
-    console.log("Image URL:", formValues,restaurant.usersRetaurant?.id);
+
     // setFormValues(initialValues);
     // handleCloseModal();
   };

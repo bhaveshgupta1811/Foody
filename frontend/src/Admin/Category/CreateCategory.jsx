@@ -32,7 +32,6 @@ const CreateCategory = ({handleClose}) => {
       restaurantId: '',
     })
     handleClose()
-    console.log('Form submitted:', formData);
   };
 
   const handleInputChange = (event) => {

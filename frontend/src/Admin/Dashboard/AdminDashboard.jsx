@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import RestaurantCard from "./RestaurantCard";
-import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getRestaurantByUserId } from "../../State/Customers/Restaurant/restaurant.action";
 import AddRestaurantCard from "./AddRestaurantCard";
@@ -8,9 +7,7 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 
 
 const AdminDashboard = () => {
-  const params = useParams();
   const {restaurant}=useSelector(state=>state);
-  console.log("params", params);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,8 +21,8 @@ const AdminDashboard = () => {
     : [];
 
   return (
-    <div className="restaurant-dashboard min-h-screen px-4 py-6 lg:px-20">
-      <div className="dashboard-hero mb-6 rounded-lg border border-white/10 bg-[#101114] p-6">
+    <div className="restaurant-dashboard admin-dashboard-page min-h-screen px-4 py-6 lg:px-20">
+      <div className="dashboard-hero admin-dashboard-hero mb-6 rounded-lg border border-white/10 bg-[#101114] p-6">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-pink-500/15 p-3 text-pink-300">
             <StorefrontIcon />
@@ -38,8 +35,10 @@ const AdminDashboard = () => {
       </div>
 
       <div className="flex flex-wrap justify-center gap-4">
-        {restaurants.map((item) => (
-          <RestaurantCard key={item.id} item={item}/>
+        {restaurants.map((item, index) => (
+          <div className="stagger" style={{ "--delay": `${index * 70}ms` }} key={item.id}>
+            <RestaurantCard item={item}/>
+          </div>
         ))}
         {restaurants.length < 1 && <AddRestaurantCard/>}
       </div>
