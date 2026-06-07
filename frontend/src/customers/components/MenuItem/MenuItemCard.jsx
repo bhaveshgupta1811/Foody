@@ -1,143 +1,188 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Typography,
-} from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addItemToCart } from "../../../State/Customers/Cart/cart.action";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { categorizedIngredients } from "../../util/CategorizeIngredients";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 
-const MenuItemCard = ({ item }) => {
+const MenuItemCard = ({ item, index = 0 }) => {
   const dispatch = useDispatch();
-
-  
-
+  const [open, setOpen] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const delay = `${index * 60}ms`;
 
-  const handleCheckboxChange = (itemName) => {
-    if (selectedIngredients.includes(itemName)) {
-      console.log("yes");
-      setSelectedIngredients(
-        selectedIngredients.filter((item) => item !== itemName)
-      );
-    } else {
-      console.log("no");
-      setSelectedIngredients([...selectedIngredients, itemName]);
-    }
+  const handleCheckboxChange = (name) => {
+    setSelectedIngredients((prev) =>
+      prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
+    );
   };
-  
-  const handleAddItemToCart = (e) => {
-    
-    const data = {
-      token: localStorage.getItem("jwt"),
-      cartItem: {
-        menuItemId: item.id,
-        quantity: 1,
-        ingredients:selectedIngredients
-      },
-    };
-    dispatch(addItemToCart(data));
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(
+      addItemToCart({
+        token: localStorage.getItem("jwt"),
+        cartItem: {
+          menuItemId: item.id,
+          quantity: 1,
+          ingredients: selectedIngredients,
+        },
+      })
+    );
+    // collapse panel after adding
+    setOpen(false);
+    setSelectedIngredients([]);
   };
-  
+
+  const hasIngredients =
+    item?.ingredients && Object.keys(categorizedIngredients(item.ingredients)).length > 0;
+
+  const isVeg = item?.vegetarian;
 
   return (
-    <>
-      {/* <div className="lg:flex items-center justify-between box">
-      <div className="lg:flex items-center lg:space-x-5">
-        <img
-          className="w-[7rem] h-[7rem] object-cover"
-          src={item.imageUrl}
-          alt=""
-        />
+    <div className="menu-card" style={{ "--delay": delay }}>
+      {/* ── Main Row ── */}
+      <div
+        className="menu-card__row"
+        onClick={() => hasIngredients && setOpen((o) => !o)}
+      >
+        {/* Image */}
+        {item.images?.[0] && (
+          <img
+            className="menu-card__img"
+            src={item.images[0]}
+            alt={item.name}
+          />
+        )}
 
-        <div className="space-y-1 lg:space-y-5 lg:max-w-2xl">
-          <p className="font-semibold text-xl">{item.name}</p>
-          <p>₹{item.price}</p>
-          <p className="text-gray-400">{item.description}</p>
-        </div>
-      </div>
-      <div>
-        <Button onClick={handleAddItemToCart}>Add To Cart</Button>
-      </div>
-
-     
-    </div> */}
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <div className="lg:flex items-center justify-between">
-            <div className="lg:flex items-center lg:space-x-5">
-              <img
-                className="w-[7rem] h-[7rem] object-cover"
-                src={item.images[0]}
-                alt=""
-              />
-
-              <div className="space-y-1 lg:space-y-5 lg:max-w-2xl">
-                <p className="font-semibold text-xl">{item.name}</p>
-                <p>₹{item.price}</p>
-                <p className="text-gray-400">{item.description}</p>
-              </div>
-            </div>
-            {/* <div>
-        <Button onClick={handleAddItemToCart}>Add To Cart</Button>
-      </div> */}
+        {/* Info */}
+        <div className="menu-card__info">
+          {/* Veg/Non-veg indicator */}
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+            <span className={isVeg ? "veg-dot" : "nonveg-dot"} title={isVeg ? "Veg" : "Non-Veg"} />
+            {!item.available && (
+              <span
+                style={{
+                  fontSize: "0.68rem",
+                  color: "#ef4444",
+                  fontWeight: 600,
+                  padding: "1px 7px",
+                  borderRadius: 10,
+                  background: "rgba(239,68,68,0.12)",
+                }}
+              >
+                Out of Stock
+              </span>
+            )}
           </div>
-        </AccordionSummary>
-        <AccordionDetails>
-          <form onSubmit={handleAddItemToCart} >
-            <div className="flex gap-5 flex-wrap">
-               {Object.keys(
-                          categorizedIngredients(item?.ingredients)
-                        )?.map((category) => (
-              <div className="pr-5">
-                
-                <p>{category}</p>
-                <FormGroup >
-                  {categorizedIngredients(item?.ingredients)[
-                                category
-                              ].map((ingredient, index) => (
-                    <FormControlLabel
-                      key={ingredient.name}
-                      control={
-                        <Checkbox
-                          checked={selectedIngredients.includes(
-                            ingredient.name
-                          )}
-                          onChange={() =>
+          <p className="menu-card__name">{item.name}</p>
+          <p className="menu-card__price">₹{item.price}</p>
+          <p className="menu-card__desc">{item.description}</p>
+          {hasIngredients && (
+            <p
+              style={{
+                fontSize: "0.72rem",
+                color: "#e91e63",
+                marginTop: 6,
+                fontWeight: 600,
+              }}
+            >
+              Customizable ▾
+            </p>
+          )}
+        </div>
+
+        {/* Add button (shown when no ingredients or panel closed) */}
+        {!hasIngredients && (
+          <button
+            className="menu-card__add-btn"
+            onClick={handleAddToCart}
+            disabled={!item.available}
+          >
+            {item.available ? "+ Add" : "Unavailable"}
+          </button>
+        )}
+      </div>
+
+      {/* ── Ingredient Panel ── */}
+      {hasIngredients && open && (
+        <div className="menu-card__ingredients-panel">
+          <form onSubmit={handleAddToCart}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
+              {Object.keys(categorizedIngredients(item.ingredients)).map(
+                (category) => (
+                  <div key={category}>
+                    <p
+                      style={{
+                        fontSize: "0.78rem",
+                        fontWeight: 700,
+                        color: "rgba(255,255,255,0.55)",
+                        marginBottom: 8,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                      }}
+                    >
+                      {category}
+                    </p>
+                    {categorizedIngredients(item.ingredients)[category].map(
+                      (ingredient) => (
+                        <label
+                          key={ingredient.name}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            marginBottom: 8,
+                            cursor: ingredient.inStoke ? "pointer" : "not-allowed",
+                            opacity: ingredient.inStoke ? 1 : 0.4,
+                          }}
+                          onClick={() =>
+                            ingredient.inStoke &&
                             handleCheckboxChange(ingredient.name)
                           }
-                          disabled={!ingredient.inStoke}
-                        />
-                      }
-                      label={ingredient.name}
-                    />
-                  ))}
-                </FormGroup>
-              </div>
-            ))}
+                        >
+                          {selectedIngredients.includes(ingredient.name) ? (
+                            <CheckCircleIcon
+                              sx={{ fontSize: "1rem", color: "#e91e63" }}
+                            />
+                          ) : (
+                            <RadioButtonUncheckedIcon
+                              sx={{
+                                fontSize: "1rem",
+                                color: "rgba(255,255,255,0.35)",
+                              }}
+                            />
+                          )}
+                          <span
+                            style={{
+                              fontSize: "0.82rem",
+                              color: "rgba(255,255,255,0.75)",
+                            }}
+                          >
+                            {ingredient.name}
+                          </span>
+                        </label>
+                      )
+                    )}
+                  </div>
+                )
+              )}
             </div>
-           
-
-            <div className="pt-5">
-              <Button variant="contained" disabled={!item.available} type="submit">
-                {item.available?"Add To Cart":"Out of stock"}
-              </Button>
+            <div style={{ marginTop: 16 }}>
+              <button
+                className="menu-card__add-btn"
+                type="submit"
+                disabled={!item.available}
+                style={{ padding: "9px 28px", fontSize: "0.85rem" }}
+              >
+                {item.available ? "Add to Cart" : "Unavailable"}
+              </button>
             </div>
           </form>
-        </AccordionDetails>
-      </Accordion>
-    </>
+        </div>
+      )}
+    </div>
   );
 };
 

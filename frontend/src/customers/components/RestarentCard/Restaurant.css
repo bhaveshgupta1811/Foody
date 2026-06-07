@@ -1,14 +1,14 @@
-.productCard .textPart {
-    transition: transform 0.3s ease-out;
-  }
-.productCard:hover .textPart{
-    transform: translateY(-1rem);
-    /* padding: 0 10px; */
-    background: #191919;
+/* RestaurantCard.css — additional micro-styles not covered by index.css */
 
+/* Cursor on closed restaurants */
+.rest-card--closed {
+  cursor: not-allowed;
+}
+.rest-card--closed .rest-card__img {
+  filter: grayscale(60%);
 }
 
-.productCard:hover{
-  /* box-shadow: #000000 0px 5px 15px; */
-  
+/* Shimmer placeholder while image loads */
+.rest-card__img[src=""] {
+  background: rgba(255,255,255,0.06);
 }
