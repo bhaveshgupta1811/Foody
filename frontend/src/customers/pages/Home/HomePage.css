@@ -1,60 +1,122 @@
-.banner{
-    background-image: url("https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
-    background-size: cover; /* Adjust as needed */
-    background-repeat: no-repeat;
-    width: 100%;
-    height: 90vh;
+/* ── Banner ──────────────────────────────────────────── */
+.banner {
+  background-image: url("https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 88vh;
+  animation: bannerZoom 12s ease-in-out infinite alternate;
 }
 
-.cover{
-    width: 100%;
-    height: 90vh;
-    background: #000;
-    opacity: .4;
+@keyframes bannerZoom {
+  from { background-size: 105%; }
+  to   { background-size: 110%; }
 }
 
-.fadout {
-    /* border: 1px solid red; */
-    z-index: 20;
-     background-color: transparent;
-     background-image: linear-gradient(
-       180deg,
-       hsla(0, 0%, 8%, 0) 0,
-       hsla(0, 0%, 8%, 0.15) 15%,
-       hsla(0, 0%, 8%, 0.35) 29%,
-       hsla(0, 0%, 8%, 0.58) 44%,
-       #131313 68%,
-       #0D0D0D0D
-     );
-     background-position: 0 top;
-     background-repeat: repeat-x;
-     background-size: 100% 100%;
-     bottom: -3rem;
-     height: 10vw;
-     opacity: 1;
-     /* top: auto; */
-     width: 100%;
-     left: 0;
-     position: absolute;
-     right: 0;
-     /* z-index: 8; */
-     /* background-color: aqua; */
-   }
+.banner__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
 
-   @media only screen and (max-width: 900px) {
-    .banner {
-      height: 40vh;
-    }
-    .cover{
-      height: 40vh;
-    
-  }
-  
-.fadout {
-  
-   bottom: -3rem;
-   height: 20vw;
-   
- }
-  }
-  
+.banner__fade {
+  z-index: 5;
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 18vw;
+  background-image: linear-gradient(
+    180deg,
+    hsla(0, 0%, 8%, 0) 0%,
+    hsla(0, 0%, 8%, 0.15) 15%,
+    hsla(0, 0%, 8%, 0.5) 45%,
+    #0d0d0d 80%
+  );
+}
+
+.banner__content {
+  position: relative;
+  z-index: 10;
+  animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  padding: 0 16px;
+}
+
+.banner__title {
+  font-size: clamp(2.8rem, 9vw, 6rem);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.6);
+  margin-bottom: 12px;
+}
+
+.banner__subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.6rem);
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  margin-bottom: 32px;
+}
+
+/* Fake search bar in banner */
+.banner__search {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  min-width: 280px;
+  max-width: 420px;
+}
+.banner__search:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Section headings ────────────────────────────────── */
+.section-heading {
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 24px;
+}
+
+/* ── Restaurant grid ─────────────────────────────────── */
+.rest-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  justify-content: flex-start;
+}
+
+/* ── Scroll-reveal utility ───────────────────────────── */
+.section-init {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.section-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 900px) {
+  .banner { height: 60vh; }
+  .banner__fade { height: 25vw; }
+  .rest-grid { justify-content: center; }
+}
+
+@media (max-width: 600px) {
+  .banner { height: 50vh; }
+  .banner__fade { height: 30vw; }
+  .rest-grid { gap: 14px; }
+}
