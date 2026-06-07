@@ -25,11 +25,9 @@ import {
   getMenuItemsByRestaurantId,
   updateMenuItemsAvailability,
 } from "../../State/Customers/Menu/menu.action";
-import { updateStockOfIngredient } from "../../State/Admin/Ingredients/Action";
-import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import { categorizedIngredients } from "../../customers/util/CategorizeIngredients";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Create, Remove } from "@mui/icons-material";
+import { Create } from "@mui/icons-material";
 
 const MenuItemTable = ({ isDashboard, name }) => {
   const location = useLocation();
@@ -73,7 +71,7 @@ const MenuItemTable = ({ isDashboard, name }) => {
 
   return (
     <Box width={"100%"}>
-      <Card className="mt-1">
+      <Card className="admin-food-card mt-1">
         <CardHeader
           title={name}
           sx={{
@@ -88,7 +86,7 @@ const MenuItemTable = ({ isDashboard, name }) => {
           }
         />
         <TableContainer>
-          <Table aria-label="table in dashboard">
+          <Table className="admin-food-table" aria-label="table in dashboard">
             <TableHead>
               <TableRow>
                 <TableCell>Image</TableCell>
@@ -119,7 +117,7 @@ const MenuItemTable = ({ isDashboard, name }) => {
                 >
                   <TableCell>
                     {" "}
-                    <Avatar alt={item.name} src={item.images[0]} />{" "}
+                    <Avatar className="admin-food-thumb" alt={item.name} src={item.images[0]} />{" "}
                   </TableCell>
 
                   <TableCell
@@ -145,26 +143,16 @@ const MenuItemTable = ({ isDashboard, name }) => {
                       )?.map((category) => (
                         <div key={category}>
                           <p className="font-semibold">{category}</p>
-                          <div className="pl-5">
+                          <div>
                             {categorizedIngredients(item?.ingredients)[
                               category
                             ].map((ingredient, index) => (
-                              <div
+                              <span
                                 key={ingredient.id}
-                                className="flex gap-1 items-center"
+                                className="admin-ingredient-pill"
                               >
-                                <div>
-                                  <HorizontalRuleIcon
-                                    sx={{ fontSize: "1rem" }}
-                                  />
-                                </div>
-                                <div
-                                  key={ingredient.id}
-                                  className="flex gap-4 items-center"
-                                >
-                                  <p>{ingredient.name}</p>
-                                </div>
-                              </div>
+                                {ingredient.name}
+                              </span>
                             ))}
                           </div>
                         </div>
@@ -178,7 +166,8 @@ const MenuItemTable = ({ isDashboard, name }) => {
                   <TableCell sx={{ textAlign: "center" }}>
                     <Button
                       color={item.available ? "success" : "error"}
-                      variant="text"
+                      variant={item.available ? "outlined" : "contained"}
+                      size="small"
                       onClick={() => handleFoodAvialability(item.id)}
                     >
                       {item.available ? "in stock" : "out of stock"}

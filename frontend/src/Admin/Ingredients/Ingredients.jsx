@@ -56,10 +56,10 @@ const Ingredients = () => {
   };
 
   return (
-    <div className="px-2">
+    <div className="admin-ingredients-page px-2">
       <Grid container spacing={1}>
         <Grid  item xs={12} lg={8}>
-          <Card className="mt-1">
+          <Card className="admin-ingredient-card mt-1">
             <CardHeader
               title={"Ingredients"}
               sx={{
@@ -75,7 +75,7 @@ const Ingredients = () => {
               }
             />
             <TableContainer className="h-[88vh] overflow-y-scroll">
-              <Table sx={{}} aria-label="table in dashboard">
+              <Table className="admin-ingredients-table" sx={{}} aria-label="table in dashboard">
                 <TableHead>
                   <TableRow>
                     <TableCell>Id</TableCell>
@@ -99,13 +99,20 @@ const Ingredients = () => {
                     >
                       <TableCell>{item?.id}</TableCell>
 
-                      <TableCell className="">{item.name}</TableCell>
+                      <TableCell className="">
+                        <span className="admin-ingredient-name">
+                          <span className="admin-ingredient-dot" />
+                          {item.name}
+                        </span>
+                      </TableCell>
                       <TableCell className="">{item.category.name}</TableCell>
 
                       <TableCell className="">
                         <Button
                           onClick={() => handleUpdateStocke(item.id)}
-                          color={item.inStoke ? "success" : "primary"}
+                          color={item.inStoke ? "success" : "warning"}
+                          variant={item.inStoke ? "outlined" : "contained"}
+                          size="small"
                         >
                           {item.inStoke ? "in stock" : "out of stock"}
                         </Button>
@@ -118,7 +125,7 @@ const Ingredients = () => {
           </Card>
         </Grid>
         <Grid item xs={12} lg={4}>
-          <Card className="mt-1">
+          <Card className="admin-ingredient-card mt-1">
             <CardHeader
               title={"Category"}
               sx={{

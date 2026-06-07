@@ -110,9 +110,9 @@ const AddMenuForm = () => {
 
   return (
     <>
-      <div className="lg:px-32 px-5 lg:flex  justify-center min-h-screen items-center pb-5">
-        <div>
-          <h1 className="font-bold text-2xl text-center py-2">
+      <div className="admin-menu-form-page lg:px-32 px-5 lg:flex justify-center min-h-screen items-center pb-5">
+        <div className="admin-menu-form-card">
+          <h1 className="admin-menu-form-title">
             Add New Menu Item
           </h1>
           <form onSubmit={formik.handleSubmit} className="space-y-4 ">
@@ -127,7 +127,7 @@ const AddMenuForm = () => {
                 />
 
                 <label className="relative" htmlFor="fileInput">
-                  <span className="w-24 h-24 cursor-pointer flex items-center justify-center p-3 border rounded-md border-gray-600">
+                  <span className="admin-menu-upload-tile">
                     <AddPhotoAlternateIcon className="text-white" />
                   </span>
                   {uploadImage && (
@@ -141,7 +141,7 @@ const AddMenuForm = () => {
                   {formik.values.images.map((image, index) => (
                     <div className="relative">
                       <img
-                        className="w-24 h-24 object-cover"
+                        className="admin-menu-preview"
                         key={index}
                         src={image}
                         alt={`ProductImage ${index + 1}`}

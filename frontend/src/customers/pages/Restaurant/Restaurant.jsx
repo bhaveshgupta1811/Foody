@@ -14,6 +14,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import StarIcon from "@mui/icons-material/Star";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import TuneIcon from "@mui/icons-material/Tune";
 
 /* ── Filter config ─────────────────────────────────────── */
 const foodTypes = [
@@ -184,14 +185,10 @@ const Restaurant = () => {
       </div>
 
       {/* ═══════════ BODY ═══════════ */}
-      <div style={{ padding: "28px 40px" }} className="lg:flex gap-8 relative">
+      <div className="restaurant-menu-shell lg:flex gap-8 relative">
         {/* ── Sidebar Filters ── */}
         <aside
-          style={{
-            width: 220,
-            flexShrink: 0,
-          }}
-          className="lg:sticky top-24 self-start"
+          className="restaurant-menu-sidebar lg:sticky top-24 self-start"
         >
           {/* Food Type */}
           <div
@@ -213,6 +210,7 @@ const Restaurant = () => {
                 marginBottom: 12,
               }}
             >
+              <TuneIcon sx={{ fontSize: "0.95rem", marginRight: "0.35rem" }} />
               Food Type
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -281,7 +279,14 @@ const Restaurant = () => {
         </aside>
 
         {/* ── Menu Items ── */}
-        <div style={{ flex: 1, minWidth: 0 }}>
+        <div className="restaurant-menu-list">
+          <div className="restaurant-menu-heading">
+            <div>
+              <p className="restaurant-menu-eyebrow">Order Online</p>
+              <h2>Recommended Dishes</h2>
+            </div>
+            <span>{menu?.menuItems?.length || 0} items</span>
+          </div>
           {menu?.menuItems?.length === 0 && !menu.loading && (
             <div
               style={{

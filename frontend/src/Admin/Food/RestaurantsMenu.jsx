@@ -3,7 +3,7 @@ import MenuItemTable from './MenuItemTable'
 
 const RestaurantsMenu = () => {
   return (
-    <div className='px-2'>
+    <div className='admin-food-page px-2'>
       <MenuItemTable name={"All Menu Items"}/>
     </div>
   )
