@@ -30,7 +30,7 @@ import { getCustomers } from "../../State/SuperAdmin/superAdmin.action";
     }, []);
   
     const handleDeleteProduct = (productId) => {
-      console.log("delete product ", productId);
+      // Handle delete product
     };
   
     return (

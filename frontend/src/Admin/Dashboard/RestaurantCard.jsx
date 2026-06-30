@@ -1,23 +1,19 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { Button } from "@mui/material";
+import { Button, Chip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addToFavorites, deleteRestaurant, updateRestaurant, updateRestaurantStatus } from "../../State/Customers/Restaurant/restaurant.action";
+import { deleteRestaurant, updateRestaurantStatus } from "../../State/Customers/Restaurant/restaurant.action";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 
 export default function RestaurantCard({ item }) {
   const navigate = useNavigate();
@@ -31,7 +27,7 @@ const handleUpdateRestaurantStatus=()=>{
 }
 
   return (
-    <Card sx={{ maxWidth: 345, m: "1rem" }}>
+    <Card className="dashboard-stat admin-restaurant-card group" sx={{ width: 345, m: "0.25rem", borderRadius: "8px", overflow: "hidden" }}>
       <CardHeader
         avatar={
           <Avatar
@@ -47,36 +43,36 @@ const handleUpdateRestaurantStatus=()=>{
           </IconButton>
         }
         title={item.name}
-        subheader="September 14, 2016"
+        subheader={item.open ? "Open for orders" : "Currently closed"}
       />
-      {/* <CardMedia
-        component="img"
-        height="194"
-        image={item.imageUrl}
-        alt="Paella dish"
-      /> */}
-      <img className="h-[17rem] w-full object-cover" src={item.imageUrl} alt="" />
+      <div className="relative overflow-hidden">
+        <img className="h-[17rem] w-full object-cover transition duration-500 group-hover:scale-105" src={item.imageUrl} alt={item.name} />
+        <Chip
+          className="!absolute !right-3 !top-3 !font-semibold"
+          color={item.open ? "success" : "warning"}
+          size="small"
+          label={item.open ? "Live" : "Paused"}
+        />
+      </div>
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+          Keep menu, orders, ingredients, events, and restaurant settings moving from a focused dashboard.
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between gap-2 px-1 pb-1">
           <div>
-            <IconButton onClick={handleDeleteRestaurant}  aria-label="delete">
+            <IconButton onClick={handleDeleteRestaurant} aria-label="delete restaurant">
               <DeleteIcon />
             </IconButton>
           </div>
           <div>
-            <Button color={item.open?"warning":"success"} onClick={handleUpdateRestaurantStatus}>
+            <Button startIcon={<PowerSettingsNewIcon />} color={item.open?"warning":"success"} onClick={handleUpdateRestaurantStatus}>
               {item.open?"Close":"Open"}
             </Button>
           </div>
           <div>
-            <Button size="small" onClick={() => navigate(`/admin/restaurants/${item.id}`)}>
+            <Button startIcon={<DashboardIcon />} size="small" variant="contained" onClick={() => navigate("/admin/restaurant")}>
               Dashboard
             </Button>
           </div>

@@ -1,4 +1,4 @@
-import { Button, Card, Divider, IconButton, Snackbar } from "@mui/material";
+import { Button, Card, Divider, Snackbar } from "@mui/material";
 import React, { Fragment, useEffect, useState } from "react";
 import AddressCard from "../../components/Address/AddressCard";
 import CartItemCard from "../../components/CartItem/CartItemCard";
@@ -47,7 +47,6 @@ const Cart = () => {
   const dispatch = useDispatch();
   const { cart, auth } = useSelector((store) => store);
   const [openAddressModal, setOpenAddressModal] = useState(false);
-  console.log("cart ", cart);
 
   const handleCloseAddressModal = () => {
     setOpenAddressModal(false);
@@ -57,7 +56,7 @@ const Cart = () => {
 
   useEffect(() => {
     dispatch(findCart(localStorage.getItem("jwt")));
-  }, []);
+  }, [dispatch]);
 
   const handleSubmit = (values, { resetForm }) => {
     const data = {
@@ -74,7 +73,6 @@ const Cart = () => {
         },
       },
     };
-    console.log("data",data)
     if (isValid(cart.cartItems)) {
       dispatch(createOrder(data));
     } else setOpenSnakbar(true);
@@ -105,14 +103,16 @@ const Cart = () => {
   return (
     <Fragment>
       {cart.cartItems.length > 0 ? (
-        <main className="lg:flex justify-between">
-          <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
+        <main className="cart-page lg:flex justify-between">
+          <section className="cart-page__summary lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
             {cart.cartItems.map((item, i) => (
-              <CartItemCard item={item} />
+              <div className="stagger" style={{ "--delay": `${i * 55}ms` }} key={item.id}>
+                <CartItemCard item={item} />
+              </div>
             ))}
 
             <Divider />
-            <div className="billDetails px-5 text-sm">
+            <div className="billDetails cart-bill-card px-5 text-sm">
               <p className="font-extralight py-5">Bill Details</p>
               <div className="space-y-3">
                 <div className="flex justify-between text-gray-400">
@@ -140,7 +140,7 @@ const Cart = () => {
             </div>
           </section>
           <Divider orientation="vertical" flexItem />
-          <section className="lg:w-[70%] flex justify-center px-5 pb-10 lg:pb-0">
+          <section className="cart-page__addresses lg:w-[70%] flex justify-center px-5 pb-10 lg:pb-0">
             <div className="">
               <h1 className="text-center font-semibold text-2xl py-10">
               Choose Delivery Address
@@ -154,7 +154,7 @@ const Cart = () => {
                 />
               ))}
 
-              <Card className="flex flex-col justify-center items-center p-5  w-64 ">
+              <Card className="cart-add-address-card flex flex-col justify-center items-center p-5  w-64 ">
                 <div className="flex space-x-5">
                   <AddLocationAltIcon />
                   <div className="space-y-5">
@@ -209,7 +209,7 @@ const Cart = () => {
           </section>
         </main>
       ) : (
-        <div className="flex h-[90vh] justify-center items-center">
+        <div className="cart-empty-state flex h-[90vh] justify-center items-center">
           <div className="text-center space-y-5">
             <RemoveShoppingCartIcon sx={{ width: "10rem", height: "10rem" }} />
             <p className="font-bold text-3xl">Your Cart Is Empty</p>

@@ -39,7 +39,6 @@ const NewAddress = ({ open, handleClose }) => {
   const location = useLocation();
 
   const handleSubmit = (values, { resetForm }) => {
-    console.log("Submitted:", values);
     resetForm();
   };
   return (

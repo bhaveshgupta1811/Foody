@@ -1,6 +1,5 @@
 import React from "react";
 import ProfileNavigation from "../../components/ProfileNavigation/ProfileNavigation";
-import { Divider } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import Orders from "../Orders/Orders";
 import UsersAddresses from "../UsersAdresses/UsersAddresses";
@@ -11,12 +10,11 @@ import Notifications from "./Notifications";
 
 const Profile = () => {
   return (
-    <div className="lg:flex justify-between">
-      <div className="sticky h-[80vh] lg:w-[20%]">
+    <div className="account-shell lg:flex justify-between">
+      <div className="account-shell__nav sticky h-[80vh] lg:w-[20%]">
         <ProfileNavigation />
       </div>
-      {/* <Divider orientation="vertical" flexItem /> */}
-      <div className="lg:w-[80%]">
+      <div className="account-shell__content lg:w-[80%]">
         <Routes>
         <Route path="/" element={<UserProfile/>} />
           <Route path="/orders" element={<Orders/>} />

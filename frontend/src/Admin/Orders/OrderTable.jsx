@@ -16,15 +16,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchRestaurantsOrder,
   updateOrderStatus,
 } from "../../State/Admin/Order/restaurants.order.action";
 // import {
@@ -43,13 +40,10 @@ const orderStatus = [
 ];
 
 const OrdersTable = ({ isDashboard, name }) => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({ status: "", sort: "" });
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const { restaurantsOrder } = useSelector((store) => store);
   const [anchorElArray, setAnchorElArray] = useState([]);
-  const { id } = useParams();
 
   const handleUpdateStatusMenuClick = (event, index) => {
     const newAnchorElArray = [...anchorElArray];
@@ -72,7 +66,7 @@ const OrdersTable = ({ isDashboard, name }) => {
 
   return (
     <Box>
-      <Card className="mt-1">
+      <Card className="admin-order-card mt-1">
         <CardHeader
           title={name}
           sx={{
@@ -82,7 +76,7 @@ const OrdersTable = ({ isDashboard, name }) => {
           }}
         />
         <TableContainer>
-          <Table sx={{}} aria-label="table in dashboard">
+          <Table className="admin-orders-table" sx={{}} aria-label="table in dashboard">
             <TableHead>
               <TableRow>
               <TableCell>Id</TableCell>
@@ -114,7 +108,9 @@ const OrdersTable = ({ isDashboard, name }) => {
                       "&:last-of-type td, &:last-of-type th": { border: 0 },
                     }}
                   >
-                    <TableCell>{item?.id}</TableCell>
+                    <TableCell>
+                      <span className="admin-order-id">#{item?.id}</span>
+                    </TableCell>
                     <TableCell sx={{}}>
                       <AvatarGroup max={4} sx={{ justifyContent: "start" }}>
                         {item.items.map((orderItem) => (
@@ -130,7 +126,9 @@ const OrdersTable = ({ isDashboard, name }) => {
                       {item?.customer.email}
                     </TableCell>
 
-                    <TableCell>₹{item?.totalAmount}</TableCell>
+                    <TableCell>
+                      <span className="admin-order-price">₹{item?.totalAmount}</span>
+                    </TableCell>
                     
                     <TableCell className="">
                       {item.items.map((orderItem) => (
@@ -151,21 +149,16 @@ const OrdersTable = ({ isDashboard, name }) => {
                     </TableCell>}
                     {!isDashboard &&<TableCell className="text-white">
                       <Chip
-                        sx={{
-                          color: "white !important",
-                          fontWeight: "bold",
-                          textAlign: "center",
-                        }}
+                        className={
+                          item.orderStatus === "PENDING"
+                            ? "status-info"
+                            : item?.orderStatus === "DELIVERED" ||
+                              item?.orderStatus === "COMPLETED"
+                            ? "status-success"
+                            : "status-warning"
+                        }
                         label={item?.orderStatus}
                         size="small"
-                        color={
-                          item.orderStatus === "PENDING"
-                            ? "info"
-                            : item?.orderStatus === "DELIVERED"
-                            ? "success"
-                            : "secondary"
-                        }
-                        className="text-white"
                       />
                     </TableCell>}
                     {!isDashboard && (
@@ -182,6 +175,8 @@ const OrdersTable = ({ isDashboard, name }) => {
                             onClick={(event) =>
                               handleUpdateStatusMenuClick(event, index)
                             }
+                            variant="outlined"
+                            size="small"
                           >
                             Status
                           </Button>

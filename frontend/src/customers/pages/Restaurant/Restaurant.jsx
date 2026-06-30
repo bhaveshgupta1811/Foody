@@ -1,217 +1,348 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import {
-  Backdrop,
-  CircularProgress,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  Grid,
-  Radio,
-  RadioGroup,
-  Typography,
-} from "@mui/material";
+import { Backdrop, CircularProgress } from "@mui/material";
 import MenuItemCard from "../../components/MenuItem/MenuItemCard";
+import RestaurantCard from "../../components/RestarentCard/RestaurantCard";
 import { useDispatch, useSelector } from "react-redux";
-import { getRestaurantById, getRestaurantsCategory } from "../../../State/Customers/Restaurant/restaurant.action";
+import {
+  getAllRestaurantsAction,
+  getRestaurantById,
+  getRestaurantsCategory,
+} from "../../../State/Customers/Restaurant/restaurant.action";
 import { getMenuItemsByRestaurantId } from "../../../State/Customers/Menu/menu.action";
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import TodayIcon from '@mui/icons-material/Today';
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import StarIcon from "@mui/icons-material/Star";
+import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import TuneIcon from "@mui/icons-material/Tune";
 
-const categories = [
-  "Thali",
-  "Starters",
-  "Indian Main Course",
-  "Rice and Biryani",
-  "Breads",
-  "Accompaniments",
-  "Dessert",
-];
-
+/* ── Filter config ─────────────────────────────────────── */
 const foodTypes = [
-  {label:"All",value:"all"},
-  { label: "Vegetarian Only", value: "vegetarian" },
-  { label: "Non-Vegetarian Only", value: "non_vegetarian" },
-  {label:"Seasonal",value:"seasonal"},
-  
+  { label: "All", value: "all" },
+  { label: "Veg Only", value: "vegetarian" },
+  { label: "Non-Veg Only", value: "non_vegetarian" },
+  { label: "Seasonal", value: "seasonal" },
 ];
+
+/* ═══════════════════════════════════════════════════════ */
 const Restaurant = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const { id } = useParams();
   const { restaurant, menu } = useSelector((store) => store);
-  const navigate = useNavigate();
+  const jwt = localStorage.getItem("jwt");
 
-  const decodedQueryString = decodeURIComponent(location.search);
-  const searchParams = new URLSearchParams(decodedQueryString);
+  const decoded = decodeURIComponent(location.search);
+  const searchParams = new URLSearchParams(decoded);
   const foodType = searchParams.get("food_type");
   const foodCategory = searchParams.get("food_category");
-  const jwt=localStorage.getItem("jwt")
 
+  /* ── load data ── */
   useEffect(() => {
-    dispatch(
-      getRestaurantById({
-        jwt: localStorage.getItem("jwt"),
-        restaurantId: id,
-      })
-    );
+    dispatch(getRestaurantById({ jwt, restaurantId: id }));
     dispatch(
       getMenuItemsByRestaurantId({
-        jwt: localStorage.getItem("jwt"),
+        jwt,
         restaurantId: id,
-        seasonal: foodType==="seasonal",
-        vegetarian: foodType==="vegetarian",
-        nonveg: foodType==="non_vegetarian",
-        foodCategory: foodCategory || ""
+        seasonal: foodType === "seasonal",
+        vegetarian: foodType === "vegetarian",
+        nonveg: foodType === "non_vegetarian",
+        foodCategory: foodCategory || "",
       })
     );
-    dispatch(getRestaurantsCategory({restaurantId:id,jwt}))
-  }, [id,foodType,foodCategory]);
+    dispatch(getRestaurantsCategory({ restaurantId: id, jwt }));
+    // load all restaurants once for the "Related" strip
+    dispatch(getAllRestaurantsAction(jwt));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, foodType, foodCategory]);
 
-  console.log("-----",{
-    jwt: localStorage.getItem("jwt"),
-    restaurantId: id,
-    seasonal: foodType==="seasonal",
-    vegetarian: foodType==="vegetarian",
-    nonveg: foodType==="non_vegetarian",}
-   )
-
-  const handleFilter = (e, value) => {
-    const searchParams = new URLSearchParams(location.search);
-  
-    if(value==="all"){
-      searchParams.delete(e.target.name);
-      searchParams.delete("food_category");
+  /* ── filter handlers ── */
+  const handleFoodTypeFilter = (value) => {
+    const sp = new URLSearchParams(location.search);
+    if (value === "all") {
+      sp.delete("food_type");
+      sp.delete("food_category");
+    } else {
+      sp.set("food_type", value);
     }
-    else searchParams.set(e.target.name, e.target.value); 
-
-    const query = searchParams.toString();
-    navigate({ search: `?${query}` });
+    navigate({ search: `?${sp.toString()}` });
   };
 
+  const handleCategoryFilter = (value) => {
+    const sp = new URLSearchParams(location.search);
+    if (value === "all") {
+      sp.delete("food_category");
+    } else {
+      sp.set("food_category", value);
+    }
+    navigate({ search: `?${sp.toString()}` });
+  };
+
+  /* ── related restaurants (same city, exclude self) ── */
+  const currentCity = restaurant.restaurant?.address?.city;
+  const relatedRestaurants = restaurant.restaurants
+    ?.filter(
+      (r) =>
+        r.id !== Number(id) &&
+        (!currentCity || r.address?.city === currentCity)
+    )
+    .slice(0, 8);
+
+  /* ── hero image ── */
+  const heroImg =
+    restaurant.restaurant?.images?.[0] ||
+    "https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg";
+
   return (
-    <><div className="px-5 lg:px-20 ">
-      <section>
-        <h3 className="text-gray-500 py-2 mt-10">
-          Home/{restaurant.restaurant?.address.country}/
-          {restaurant.restaurant?.name}/{restaurant.restaurant?.id}/Order Online
-        </h3>
-        <div>
-         
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-            <img
-            className="w-full h-[40vh] object-cover"
-            src={restaurant.restaurant?.images[0]}
-            alt=""
-          />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-            <img
-            className="w-full h-[40vh] object-cover"
-            src={restaurant.restaurant?.images[1]}
-            alt=""
-          />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-            <img
-            className="w-full h-[40vh] object-cover"
-            src={restaurant.restaurant?.images[2]}
-            alt=""
-          />
-            </Grid>
-          </Grid>
-        </div>
-        <div className="pt-3 pb-5">
-          <h1 className="text-4xl font-semibold">
+    <>
+      {/* ═══════════ HERO ═══════════ */}
+      <div className="rest-hero">
+        <img className="rest-hero__img" src={heroImg} alt={restaurant.restaurant?.name} />
+        <div className="rest-hero__overlay" />
+        <div className="rest-hero__content">
+          {/* Breadcrumb */}
+          <p
+            style={{
+              fontSize: "0.75rem",
+              color: "rgba(255,255,255,0.5)",
+              marginBottom: 8,
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            Home
+            <span style={{ opacity: 0.4 }}>›</span>
+            {restaurant.restaurant?.address?.country}
+            <span style={{ opacity: 0.4 }}>›</span>
+            {restaurant.restaurant?.name}
+            <span style={{ opacity: 0.4 }}>›</span>
+            <span style={{ color: "#e91e63" }}>Order Online</span>
+          </p>
+
+          <h1
+            style={{
+              fontSize: "clamp(1.6rem, 5vw, 2.8rem)",
+              fontWeight: 800,
+              color: "#fff",
+              margin: "0 0 6px",
+              lineHeight: 1.1,
+            }}
+          >
             {restaurant.restaurant?.name}
           </h1>
-          <p className="text-gray-500 mt-1">{restaurant.restaurant?.description}</p>
-          <div className="space-y-3 mt-3">
-              <p className="text-gray-500 flex items-center gap-3">
-            <LocationOnIcon/> <span>{restaurant.restaurant?.address.streetAddress}
-              </span> 
+          <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "0.9rem", maxWidth: 540 }}>
+            {restaurant.restaurant?.description}
           </p>
-          <p className="flex items-center gap-3 text-gray-500">
-           <TodayIcon/> <span className=" text-orange-300"> {restaurant.restaurant?.openingHours} (Today)</span>  
-          </p>
-          </div>
-        
-        </div>
-      </section>
-      <Divider />
 
-      <section className="pt-[2rem] lg:flex relative ">
-        <div className="space-y-10 lg:w-[20%] filter">
-          <div className="box space-y-5 lg:sticky top-28">
-            
-            <div className="">
-              <Typography sx={{ paddingBottom: "1rem" }} variant="h5">
-                Food Type
-              </Typography>
-              <FormControl className="py-10 space-y-5" component="fieldset">
-                <RadioGroup
-                  name="food_type"
-                  value={foodType || "all"}
-                  onChange={handleFilter}
+          {/* Quick stats row */}
+          <div style={{ display: "flex", gap: 18, marginTop: 14, flexWrap: "wrap" }}>
+            <span style={{ display: "flex", alignItems: "center", gap: 5, color: "#f59e0b", fontWeight: 700 }}>
+              <StarIcon sx={{ fontSize: "1rem" }} /> 4.2
+            </span>
+            <span style={{ display: "flex", alignItems: "center", gap: 5, color: "rgba(255,255,255,0.55)", fontSize: "0.85rem" }}>
+              <AccessTimeIcon sx={{ fontSize: "1rem" }} />
+              {restaurant.restaurant?.openingHours || "Open Now"}
+            </span>
+            <span style={{ display: "flex", alignItems: "center", gap: 5, color: "rgba(255,255,255,0.55)", fontSize: "0.85rem" }}>
+              <LocationOnIcon sx={{ fontSize: "1rem" }} />
+              {restaurant.restaurant?.address?.streetAddress},{" "}
+              {restaurant.restaurant?.address?.city}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══════════ INFO BAR (pills) ═══════════ */}
+      <div className="rest-info-bar">
+        <span className="rest-info-pill">
+          <RestaurantMenuIcon sx={{ fontSize: "0.85rem" }} />
+          {restaurant.categories?.length || 0} Categories
+        </span>
+        <span className="rest-info-pill">
+          <AccessTimeIcon sx={{ fontSize: "0.85rem" }} />
+          {restaurant.restaurant?.openingHours || "Check Timings"}
+        </span>
+        <span className="rest-info-pill">
+          <LocationOnIcon sx={{ fontSize: "0.85rem" }} />
+          {restaurant.restaurant?.address?.city || "City"}
+        </span>
+        <span
+          className="rest-info-pill"
+          style={{
+            background: restaurant.restaurant?.open
+              ? "rgba(22,163,74,0.15)"
+              : "rgba(220,38,38,0.15)",
+            borderColor: restaurant.restaurant?.open
+              ? "rgba(22,163,74,0.4)"
+              : "rgba(220,38,38,0.4)",
+            color: restaurant.restaurant?.open ? "#4ade80" : "#f87171",
+          }}
+        >
+          {restaurant.restaurant?.open ? "● Open" : "● Closed"}
+        </span>
+      </div>
+
+      {/* ═══════════ BODY ═══════════ */}
+      <div className="restaurant-menu-shell lg:flex gap-8 relative">
+        {/* ── Sidebar Filters ── */}
+        <aside
+          className="restaurant-menu-sidebar lg:sticky top-24 self-start"
+        >
+          {/* Food Type */}
+          <div
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: 14,
+              padding: "16px",
+              marginBottom: 16,
+            }}
+          >
+            <p
+              style={{
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                color: "rgba(255,255,255,0.4)",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                marginBottom: 12,
+              }}
+            >
+              <TuneIcon sx={{ fontSize: "0.95rem", marginRight: "0.35rem" }} />
+              Food Type
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {foodTypes.map((ft) => (
+                <button
+                  key={ft.value}
+                  className={`rest-filter-btn ${
+                    (foodType || "all") === ft.value ? "active" : ""
+                  }`}
+                  style={{ textAlign: "left" }}
+                  onClick={() => handleFoodTypeFilter(ft.value)}
                 >
-                  {foodTypes?.map((item, index) => (
-                    <FormControlLabel
-                      key={index}
-                      value={item.value}
-                      control={<Radio />}
-                      label={item.label}
-                      sx={{ color: "gray" }}
-                    />
-                  ))}
-                </RadioGroup>
-                <Divider/>
-                <Typography sx={{ paddingBottom: "1rem" }} variant="h5">
-                Food Category
-              </Typography>
-                <RadioGroup
-                  name="food_category"
-                  value={foodCategory || "all"}
-                  onChange={handleFilter}
-                >
-                   <FormControlLabel
-                      
-                      value={"all"}
-                      control={<Radio />}
-                      label={"All"}
-                      sx={{ color: "gray" }}
-                    />
-                  {restaurant?.categories.map((item, index) => (
-                    <FormControlLabel
-                      key={index}
-                      value={item.name}
-                      control={<Radio />}
-                      label={item.name}
-                      sx={{ color: "gray" }}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
+                  {ft.label}
+                </button>
+              ))}
             </div>
           </div>
+
+          {/* Category */}
+          {restaurant?.categories?.length > 0 && (
+            <div
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: 14,
+                padding: "16px",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "0.75rem",
+                  fontWeight: 700,
+                  color: "rgba(255,255,255,0.4)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  marginBottom: 12,
+                }}
+              >
+                Category
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <button
+                  className={`rest-filter-btn ${
+                    !foodCategory || foodCategory === "all" ? "active" : ""
+                  }`}
+                  style={{ textAlign: "left" }}
+                  onClick={() => handleCategoryFilter("all")}
+                >
+                  All
+                </button>
+                {restaurant.categories.map((cat) => (
+                  <button
+                    key={cat.name}
+                    className={`rest-filter-btn ${
+                      foodCategory === cat.name ? "active" : ""
+                    }`}
+                    style={{ textAlign: "left" }}
+                    onClick={() => handleCategoryFilter(cat.name)}
+                  >
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </aside>
+
+        {/* ── Menu Items ── */}
+        <div className="restaurant-menu-list">
+          <div className="restaurant-menu-heading">
+            <div>
+              <p className="restaurant-menu-eyebrow">Order Online</p>
+              <h2>Recommended Dishes</h2>
+            </div>
+            <span>{menu?.menuItems?.length || 0} items</span>
+          </div>
+          {menu?.menuItems?.length === 0 && !menu.loading && (
+            <div
+              style={{
+                textAlign: "center",
+                padding: "60px 0",
+                color: "rgba(255,255,255,0.3)",
+              }}
+            >
+              <RestaurantMenuIcon sx={{ fontSize: "3rem", marginBottom: 1 }} />
+              <p style={{ fontSize: "1rem" }}>No items found for this filter.</p>
+            </div>
+          )}
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {menu?.menuItems?.map((item, i) => (
+              <MenuItemCard key={item.id} item={item} index={i} />
+            ))}
+          </div>
         </div>
-        <div className="lg:w-[80%] space-y-5 lg:pl-10">
-          {menu?.menuItems.map((item) => (
-            <MenuItemCard item={item} />
-            // <p>ashok</p>
-          ))}
+      </div>
+
+      {/* ═══════════ RELATED RESTAURANTS ═══════════ */}
+      {relatedRestaurants?.length > 0 && (
+        <div
+          style={{
+            padding: "32px 40px",
+            borderTop: "1px solid rgba(255,255,255,0.07)",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "1.3rem",
+              fontWeight: 700,
+              color: "#f0f0f0",
+              marginBottom: 20,
+            }}
+          >
+            More Restaurants Near You
+          </h2>
+          <div className="related-strip">
+            {relatedRestaurants.map((r, i) => (
+              <div key={r.id} style={{ flexShrink: 0 }}>
+                <RestaurantCard data={r} index={i} />
+              </div>
+            ))}
+          </div>
         </div>
-      </section>
-    </div>
-    <Backdrop
-  sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-  open={menu.loading || restaurant.loading}
-  
->
-  <CircularProgress color="inherit" />
-</Backdrop>
+      )}
+
+      {/* ═══════════ LOADING BACKDROP ═══════════ */}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={menu.loading || restaurant.loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
-    
   );
 };
 
